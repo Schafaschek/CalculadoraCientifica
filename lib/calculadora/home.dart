@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'calculos.dart';
 
 class homepage extends StatefulWidget {
   const homepage({key}) : super(key: key);
@@ -10,6 +11,8 @@ class homepage extends StatefulWidget {
 }
 
 class _homepageState extends State<homepage> {
+  final _calculo = Calculo();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,14 +20,15 @@ class _homepageState extends State<homepage> {
         backgroundColor: Colors.black,
         title: Text('Calculadora Cientifica'),
       ),
-      body: Column(
+      body: //SingleChildScrollView(
+          //child:
+          Column(
         children: <Widget>[
           _criaVisor(),
-          Divider(height: 0.1),
           _criaTeclado(),
         ],
       ),
-    );
+    ); //);
   }
 
   Widget _criaVisor() {
@@ -37,9 +41,9 @@ class _homepageState extends State<homepage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(1.0),
               child: AutoSizeText(
-                "2",
+                _calculo.resultado,
                 minFontSize: 20,
                 maxFontSize: 100,
                 maxLines: 1,
@@ -63,18 +67,20 @@ class _homepageState extends State<homepage> {
       height: 500,
       child: Column(
         children: <Widget>[
+          SizedBox(height: 2, width: 2),
           Expanded(
             flex: 1,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 _criaBotao('AC', backgroudColor: Colors.green.shade100),
-                _criaBotao('()', backgroudColor: Colors.lightBlue.shade100),
+                _criaBotao('PH', backgroudColor: Colors.lightBlue.shade100),
                 _criaBotao('%', backgroudColor: Colors.lightBlue.shade100),
-                _criaBotao('PH', backgroudColor: Colors.lightBlue.shade100)
+                _criaBotao('/', backgroudColor: Colors.lightBlue.shade100)
               ],
             ),
           ),
+          SizedBox(height: 2, width: 2),
           Expanded(
             flex: 1,
             child: Row(
@@ -87,6 +93,7 @@ class _homepageState extends State<homepage> {
               ],
             ),
           ),
+          SizedBox(height: 2, width: 2),
           Expanded(
             flex: 1,
             child: Row(
@@ -99,6 +106,7 @@ class _homepageState extends State<homepage> {
               ],
             ),
           ),
+          SizedBox(height: 2, width: 2),
           Expanded(
             flex: 1,
             child: Row(
@@ -111,6 +119,7 @@ class _homepageState extends State<homepage> {
               ],
             ),
           ),
+          SizedBox(height: 2, width: 2),
           Expanded(
             flex: 1,
             child: Row(
@@ -118,7 +127,7 @@ class _homepageState extends State<homepage> {
               children: <Widget>[
                 _criaBotao('0', backgroudColor: Colors.grey.shade100),
                 _criaBotao('.', backgroudColor: Colors.grey.shade100),
-                _criaBotao('PH', backgroudColor: Colors.grey.shade100),
+                _criaBotao('DEL', backgroudColor: Colors.grey.shade100),
                 _criaBotao('=', backgroudColor: Colors.deepPurple.shade100)
               ],
             ),
@@ -133,9 +142,9 @@ class _homepageState extends State<homepage> {
       Color textColor = Colors.black,
       Color backgroudColor = Colors.grey}) {
     final ButtonStyle style = ElevatedButton.styleFrom(
-      primary: Color(backgroudColor.value),
-      onPrimary: Color(textColor.value),
-    );
+        primary: Color(backgroudColor.value),
+        onPrimary: Color(textColor.value),
+        padding: EdgeInsets.all(2.0));
     return Expanded(
       flex: flex,
       child: ElevatedButton(
@@ -145,7 +154,9 @@ class _homepageState extends State<homepage> {
           style: TextStyle(fontSize: 24),
         ),
         onPressed: () {
-          setState(() {});
+          setState(() {
+            _calculo.aplicarOp(label);
+          });
         },
       ),
     );
