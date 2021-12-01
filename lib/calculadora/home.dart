@@ -1,7 +1,9 @@
+import 'package:calculadora_cien/calculadora/constantes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'calculos.dart';
+import 'constantes.dart';
 
 class homepage extends StatefulWidget {
   const homepage({key}) : super(key: key);
@@ -19,6 +21,19 @@ class _homepageState extends State<homepage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text('Calculadora Cientifica'),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: _escolhas,
+            itemBuilder: (BuildContext context) {
+              return Constantes.escolhas.map((String escolhas) {
+                return PopupMenuItem<String>(
+                  value: escolhas,
+                  child: Text(escolhas),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: //SingleChildScrollView(
           //child:
@@ -67,6 +82,18 @@ class _homepageState extends State<homepage> {
       height: 500,
       child: Column(
         children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                _criaBotaoEsp('√'),
+                _criaBotaoEsp('π'),
+                _criaBotaoEsp('^'),
+                _criaBotaoEsp('!')
+              ],
+            ),
+          ),
           SizedBox(height: 2, width: 2),
           Expanded(
             flex: 1,
@@ -144,7 +171,10 @@ class _homepageState extends State<homepage> {
     final ButtonStyle style = ElevatedButton.styleFrom(
         primary: Color(backgroudColor.value),
         onPrimary: Color(textColor.value),
-        padding: EdgeInsets.all(2.0));
+        padding: EdgeInsets.all(2.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(40),
+        ));
     return Expanded(
       flex: flex,
       child: ElevatedButton(
@@ -162,3 +192,27 @@ class _homepageState extends State<homepage> {
     );
   }
 }
+
+Widget _criaBotaoEsp(String label, {int flex: 1}) {
+  Function(String) cb;
+  final ButtonStyle style = TextButton.styleFrom(
+    primary: Colors.black,
+    padding: EdgeInsets.all(2.0),
+  );
+  return Expanded(
+    flex: flex,
+    child: TextButton(
+        style: style,
+        child: Text(
+          label,
+          style: TextStyle(fontSize: 16),
+        ),
+        onPressed: () {
+          /*setState(() {
+            Calculo().aplicarOp(label);
+          });*/
+        }),
+  );
+}
+
+void _escolhas(String escolha) {}

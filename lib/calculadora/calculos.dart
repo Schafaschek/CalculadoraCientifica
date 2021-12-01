@@ -1,3 +1,5 @@
+import 'package:calculadora_cien/banco_dados/bd.dart';
+
 class Calculo {
   static const operators = const ['%', '/', '+', '-', 'x', '='];
   String _resultado = '0';
@@ -6,6 +8,7 @@ class Calculo {
   String _operator;
   bool _limpaValor = false;
   String _ultimoR;
+  ArmazenaConta aC = ArmazenaConta();
 
   void aplicarOp(String retorno) {
     if (_trocandoOp(retorno)) {
@@ -90,20 +93,39 @@ class Calculo {
     return _resultado;
   }
 
+  _salvarResultado(operator, valor1, valor2, valorF) {
+    Resultado aCR = Resultado();
+    aCR.operator = operator;
+    aCR.valor1 = valor1.toString();
+    aCR.valor2 = valor2.toString();
+    aCR.vTotal = valorF.toString();
+    aC.saveResultado(aCR);
+  }
+
   double calculos(double valor1, double valor2, String operator) {
     double valorF = 0;
+    Resultado aCR = Resultado();
     switch (operator) {
       case '+':
         valorF = valor1 + valor2;
+        _salvarResultado(operator, valor1, valor2, valorF);
         return valorF;
       case '-':
-        return valorF = valor1 - valor2;
+        valorF = valor1 - valor2;
+        _salvarResultado(operator, valor1, valor2, valorF);
+        return valorF;
       case 'x':
-        return valorF = valor1 * valor2;
+        valorF = valor1 * valor2;
+        _salvarResultado(operator, valor1, valor2, valorF);
+        return valorF;
       case '/':
-        return valorF = valor1 / valor2;
+        valorF = valor1 / valor2;
+        _salvarResultado(operator, valor1, valor2, valorF);
+        return valorF;
       case '%':
-        return valorF = valor1 % valor2;
+        valorF = valor1 % valor2;
+        _salvarResultado(operator, valor1, valor2, valorF);
+        return valorF;
     }
   }
 }
