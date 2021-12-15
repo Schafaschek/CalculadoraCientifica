@@ -30,7 +30,7 @@ class ArmazenaConta {
 
   Future<Database> initDb() async {
     final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, "contacts.db");
+    final path = join(databasesPath, "historico.db");
 
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int newerVersion) async {

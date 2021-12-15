@@ -1,4 +1,6 @@
+import 'package:calculadora_cien/banco_dados/bd.dart';
 import 'package:calculadora_cien/calculadora/constantes.dart';
+import 'package:calculadora_cien/calculadora/historico.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -12,8 +14,11 @@ class homepage extends StatefulWidget {
   _homepageState createState() => _homepageState();
 }
 
+enum Temas { temaClaro, temaEscuro }
+
 class _homepageState extends State<homepage> {
   final _calculo = Calculo();
+  bool temaC = true;
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +105,21 @@ class _homepageState extends State<homepage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                _criaBotaoEsp('sin'),
+                _criaBotaoEsp('cos'),
+                _criaBotaoEsp('tan'),
+                _criaBotaoEsp('ln')
+              ],
+            ),
+          ),
+          SizedBox(height: 2, width: 2),
+          Expanded(
+            flex: 1,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
                 _criaBotao('AC', backgroudColor: Colors.green.shade100),
-                _criaBotao('PH', backgroudColor: Colors.lightBlue.shade100),
+                _criaBotao('Exp', backgroudColor: Colors.lightBlue.shade100),
                 _criaBotao('%', backgroudColor: Colors.lightBlue.shade100),
                 _criaBotao('/', backgroudColor: Colors.lightBlue.shade100)
               ],
@@ -191,28 +209,70 @@ class _homepageState extends State<homepage> {
       ),
     );
   }
-}
 
-Widget _criaBotaoEsp(String label, {int flex: 1}) {
-  Function(String) cb;
-  final ButtonStyle style = TextButton.styleFrom(
-    primary: Colors.black,
-    padding: EdgeInsets.all(2.0),
-  );
-  return Expanded(
-    flex: flex,
-    child: TextButton(
-        style: style,
-        child: Text(
-          label,
-          style: TextStyle(fontSize: 16),
-        ),
-        onPressed: () {
-          /*setState(() {
-            Calculo().aplicarOp(label);
-          });*/
-        }),
-  );
-}
+  Widget _criaBotaoEsp(String label, {int flex: 1}) {
+    Function(String) cb;
+    final ButtonStyle style = TextButton.styleFrom(
+      primary: Colors.black,
+      padding: EdgeInsets.all(2.0),
+    );
+    return Expanded(
+      flex: flex,
+      child: TextButton(
+          style: style,
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 16),
+          ),
+          onPressed: () {
+            setState(() {
+              _calculo.aplicarOp(label);
+            });
+          }),
+    );
+  }
 
-void _escolhas(String escolha) {}
+  void _escolhas(String escolha) {
+    if (escolha == 'Histórico') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Historico()),
+      );
+    } else if (escolha == 'Escolher Tema') {
+      _popUpMenu();
+    }
+  }
+
+  Future<void> _popUpMenu() async {
+    switch (await showDialog<Temas>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Escolher Tema'),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, Temas.temaClaro);
+                },
+                child: const Text('Tema Claro'),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, Temas.temaEscuro);
+                },
+                child: const Text('Tema Escuro'),
+              ),
+            ],
+          );
+        })) {
+      case Temas.temaClaro:
+        temaC = true;
+        break;
+      case Temas.temaEscuro:
+        temaC = false;
+        break;
+      default:
+        break;
+    }
+  }
+}

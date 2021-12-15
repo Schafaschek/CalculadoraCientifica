@@ -1,7 +1,19 @@
 import 'package:calculadora_cien/banco_dados/bd.dart';
+import 'dart:math';
 
 class Calculo {
-  static const operators = const ['%', '/', '+', '-', 'x', '='];
+  static const operators = const [
+    '%',
+    '/',
+    '+',
+    '-',
+    'x',
+    '=',
+    '^',
+  ];
+
+  static const operatorsE = const ['√', '!', 'Exp', 'sin', 'cos', 'tan', 'log'];
+
   String _resultado = '0';
   final _nums = [0.0, 0.0];
   int _numIndex = 0;
@@ -9,8 +21,12 @@ class Calculo {
   bool _limpaValor = false;
   String _ultimoR;
   ArmazenaConta aC = ArmazenaConta();
+  final double pi = 3.14159265359;
 
   void aplicarOp(String retorno) {
+    if (retorno == 'π') {
+      retorno = pi.toString();
+    }
     if (_trocandoOp(retorno)) {
       _operator = retorno;
       return;
@@ -20,6 +36,8 @@ class Calculo {
       _apagaTudo();
     } else if (retorno == 'DEL') {
       _apagaUltimoDig();
+    } else if (operatorsE.contains(retorno)) {
+      _setOperatorEx(retorno);
     } else if (operators.contains(retorno)) {
       _setOperator(retorno);
     } else {
@@ -50,6 +68,18 @@ class Calculo {
     _operator = null;
     _numIndex = 0;
     _limpaValor = false;
+  }
+
+  _setOperatorEx(String newOperation) {
+    if (_numIndex == 0) {
+      _nums[0] = calculosE(newOperation, _nums[0]);
+      _limpaValor = true;
+      _resultado = _nums[0].toString();
+    } else if (_numIndex == 1) {
+      _nums[1] = calculosE(newOperation, _nums[1]);
+      _limpaValor = true;
+      _resultado = _nums[1].toString();
+    }
   }
 
   _setOperator(String newOperation) {
@@ -126,6 +156,40 @@ class Calculo {
         valorF = valor1 % valor2;
         _salvarResultado(operator, valor1, valor2, valorF);
         return valorF;
+      case '^':
+        valorF = pow(valor1, valor2);
+        _salvarResultado(operator, valor1, valor2, valorF);
+        return valorF;
     }
+  }
+
+  calculosE(String operatorE, double valor) {
+    switch (operatorE) {
+      case '√':
+        valor = sqrt(valor);
+        return valor;
+      case '!':
+        valor = funcFatorial(valor);
+        return valor;
+      case 'Exp':
+        valor = exp(valor);
+        return valor;
+      case 'sin':
+        valor = sin(valor);
+        return valor;
+      case 'tan':
+        valor = tan(valor);
+        return valor;
+      case 'cos':
+        valor = cos(valor);
+        return valor;
+      case 'log':
+        valor = log(valor);
+        return valor;
+    }
+  }
+
+  funcFatorial(double valor) {
+    return (valor == 1 || valor == 0) ? 1 : valor * funcFatorial(valor - 1);
   }
 }
