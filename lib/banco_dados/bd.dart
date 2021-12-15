@@ -41,14 +41,14 @@ class ArmazenaConta {
   }
 
   Future<Resultado> saveResultado(Resultado resultado) async {
-    Database dbContact = await db;
-    resultado.id = await dbContact.insert(resultadoTable, resultado.toMap());
+    Database dbArmazena = await db;
+    resultado.id = await dbArmazena.insert(resultadoTable, resultado.toMap());
     return resultado;
   }
 
   Future<Resultado> getResultado(int id) async {
-    Database dbContact = await db;
-    List<Map> maps = await dbContact.query(resultadoTable,
+    Database dbArmazena = await db;
+    List<Map> maps = await dbArmazena.query(resultadoTable,
         columns: [
           idColumn,
           valor1Column,
@@ -66,30 +66,37 @@ class ArmazenaConta {
   }
 
   Future<int> deleteResultado(int id) async {
-    Database dbContact = await db;
-    return await dbContact
+    Database dbArmazena = await db;
+    return await dbArmazena
         .delete(resultadoTable, where: "$idColumn = ?", whereArgs: [id]);
   }
 
+  /*Future<List> deleteAll() async {
+    ArmazenaConta helper = ArmazenaConta();
+    Database dbArmazena = await db;
+    helper.getAllResultados();
+    dbArmazena.rawDelete("DELETE FROM $resultadoTable");
+  }*/
+
   Future<List> getAllResultados() async {
-    Database dbContact = await db;
-    List listMap = await dbContact.rawQuery("SELECT * FROM $resultadoTable");
-    List<Resultado> listContact = List();
+    Database dbArmazena = await db;
+    List listMap = await dbArmazena.rawQuery("SELECT * FROM $resultadoTable");
+    List<Resultado> listResultados = List();
     for (Map m in listMap) {
-      listContact.add(Resultado.fromMap(m));
+      listResultados.add(Resultado.fromMap(m));
     }
-    return listContact;
+    return listResultados;
   }
 
   Future<int> getNumber() async {
-    Database dbContact = await db;
+    Database dbArmazena = await db;
     return Sqflite.firstIntValue(
-        await dbContact.rawQuery("SELECT COUNT(*) FROM $resultadoTable"));
+        await dbArmazena.rawQuery("SELECT COUNT(*) FROM $resultadoTable"));
   }
 
   Future close() async {
-    Database dbContact = await db;
-    dbContact.close();
+    Database dbArmazena = await db;
+    dbArmazena.close();
   }
 }
 

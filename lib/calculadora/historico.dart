@@ -1,5 +1,6 @@
 import 'package:calculadora_cien/banco_dados/bd.dart';
 import 'package:flutter/material.dart';
+import 'package:calculadora_cien/calculadora/constantes.dart';
 
 class Historico extends StatefulWidget {
   @override
@@ -30,6 +31,19 @@ class _HistoricoState extends State<Historico> {
         backgroundColor: Colors.black,
         title: const Text('Histórico'),
         centerTitle: true,
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: _escolhas,
+            itemBuilder: (BuildContext context) {
+              return Constantes.escolhas2.map((String escolhas) {
+                return PopupMenuItem<String>(
+                  value: escolhas,
+                  child: Text(escolhas),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       backgroundColor: Color.fromRGBO(235, 242, 247, 1),
       body: ListView.builder(
@@ -86,5 +100,11 @@ class _HistoricoState extends State<Historico> {
         ),
       ),
     );
+  }
+
+  void _escolhas(String escolha) {
+    if (escolha == 'Excluir Histórico') {
+      //pegaC.deleteAll();
+    }
   }
 }

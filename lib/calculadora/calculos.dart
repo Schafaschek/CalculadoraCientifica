@@ -12,7 +12,7 @@ class Calculo {
     '^',
   ];
 
-  static const operatorsE = const ['√', '!', 'Exp', 'sin', 'cos', 'tan', 'log'];
+  static const operatorsE = const ['√', '!', 'Exp', 'sin', 'cos', 'tan', 'ln'];
 
   String _resultado = '0';
   final _nums = [0.0, 0.0];
@@ -183,7 +183,7 @@ class Calculo {
       case 'cos':
         valor = cos(valor);
         return valor;
-      case 'log':
+      case 'ln':
         valor = log(valor);
         return valor;
     }
